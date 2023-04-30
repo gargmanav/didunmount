@@ -1,13 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 import Interview from './Components/Interview';
 
-function App() {
+
+const App = () => {
+  const [items, setItems] = useState([]);
+
+  const handleAddItem = (newItem) => {
+    setItems([...items, newItem]);
+  };
+
   return (
-    <div className="App">
-      <Interview/>
+    <div>
+      <h1>My Shopping List</h1>
+      <Interview onAddItem={handleAddItem} />
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>
+            {item.item} - {item.quantity} - ${item.price}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
 export default App;
+

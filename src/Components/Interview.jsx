@@ -1,74 +1,83 @@
-import React, { useState,useEffect,useRef } from 'react'
+import React, { useState, useEffect } from 'react';
 
-const Interview = () => {
-     const [time,settime] = useState(new Date().toLocaleTimeString())
-     let datatimer = useRef(null)
-     
-    
-    
-    const [data,setdata] = useState(0)
-    const addfunc = ()=>{
-        datatimer.current=setInterval(() => {
-            setdata((previous)=>previous+1)
-            settime(new Date().toLocaleTimeString())
-        }, 1000);
-        
-    }
-    
-    
+const Interview = ({ item, onAddItem }) => {
+  const [formData, setFormData] = useState({
+    item: '',
+    quantity: '',
+    price: '',
+  });
 
-    const subfunc = ()=>{
-       clearInterval(datatimer.current)
-    }
-    // const [data, setdata] = useState("")
-    // const [result, setresult] = useState([])
-    // const [answer,setanswer]  = useState([])
-    // const addfunc = ()=>{
-    //     setresult([...result,data])
-    //     setanswer([...answer,false])
-    // }
-    // const deletefunc = (id)=>{
-    //     const newresult = result.filter((ele,index)=>{
-    //         return index != id
-    //     })
-    //     setresult(newresult)
-    // }
-    // const check = (id)=>{
-    // //     const newAnswer = [...answer];
-    // // newAnswer[id] = true;
-    // // setanswer(newAnswer);
-    // }
+  useEffect(() => {
+    setFormData({
+      item: item?.item || '',
+      quantity: item?.quantity || '',
+      price: item?.price || '',
+    });
+  }, [item]);
+
+  const handleItemChange = (event) => {
+    setFormData({ ...formData, item: event.target.value });
+  };
+
+  const handleQuantityChange = (event) => {
+    setFormData({ ...formData, quantity: event.target.value });
+  };
+
+  const handlePriceChange = (event) => {
+    setFormData({ ...formData, price: event.target.value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const { item, quantity, price } = formData;
+    const newItem = {
+      item,
+      quantity,
+      price,
+    };
+    onAddItem(newItem);
+    setFormData({
+      item: '',
+      quantity: '',
+      price: '',
+    });
+  };
+
   return (
-    <>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="item">Item:</label>
+        <input
+          type="text"
+          id="item"
+          name="item"
+          value={formData.item}
+          onChange={handleItemChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="quantity">Quantity:</label>
+        <input
+          type="number"
+          id="quantity"
+          name="quantity"
+          value={formData.quantity}
+          onChange={handleQuantityChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="price">Price:</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          value={formData.price}
+          onChange={handlePriceChange}
+        />
+      </div>
+      <button type="submit">Add Item</button>
+    </form>
+  );
+};
 
-
-    <h1>{data}</h1>
-    <button onClick={addfunc}>Start</button>
-    <button onClick={subfunc}>Stop</button>
-
-
-
-    <h1>{time}</h1>
-    {/* <input type="text" onChange={(e)=>setdata(e.target.value)}/>
-    <button onClick={addfunc}>add</button>
-    {
-        result.map((ele,id)=>{
-            <div key={id}>
-            <label>
-              <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={(e) => setIsChecked(e.target.checked)}
-              />
-              Checkbox
-            </label>
-            <p>{ele}</p>
-            {isChecked && <button onClick={() => deleteFunc(id)}>Delete</button>}
-          </div>
-        }) */}
-    {/* } */}
-    </>
-  )
-}
-
-export default Interview
+export default Interview;
